@@ -149,3 +149,15 @@ const actors = [{
 console.log(bars);
 console.log(events);
 console.log(actors);
+
+function bookingPrice(persons, time, pricePerHour, pricePerPerson){
+	return persons*pricePerPerson + time*pricePerHour;
+}
+
+events.forEach(event => bars.forEach(bar => {
+	if(event.barId == bar.id){
+		event.price = bookingPrice(event.persons, event.time, bar.pricePerHour, bar.pricePerPerson)
+	}
+}))
+
+
