@@ -147,20 +147,49 @@ const actors = [{
 }];
 
 
-
-function bookingPrice(persons, time, pricePerHour, pricePerPerson){
+function bookingPrice(persons, time, pricePerHour, pricePerPerson){ // step 2
 	if(persons >= 10 && persons <= 20)pricePerPerson*=0.9;
 	if(persons >= 20 && persons <= 60)pricePerPerson*=0.7;
 	if(persons >= 60)pricePerPerson*=0.5;
 	var bookerPrice = persons*pricePerPerson + time*pricePerHour;
+	
 	return bookerPrice;
 }
 
-events.forEach(event => bars.forEach(bar => {
+events.forEach(event => bars.forEach(bar => { // step 1, 3 and 4
 	if(event.barId == bar.id){
-		event.price = bookingPrice(event.persons, event.time, bar.pricePerHour, bar.pricePerPerson);
+		event.price = bookingPrice(event.persons, event.time, bar.pricePerHour, bar.pricePerPerson); // step 1
+		var commission = event.price * 0.3;// step 3
+		event.commission.insurance = commission/2;
+		event.commission.treasury = event.persons;
+		event.commission.privateaser = commission - (event.commission.insurance + event.commission.treasury);
+		if(event.options.deductibleReduction){ //  step 4
+			event.price += event.persons;
+		}
 	}
 }))
+
+actors.forEach(actor => events.forEach(event =>{ // step 5
+	if(event.id == actor.eventId){
+		actor.payment.forEach(payment =>{
+			switch(payment.who){
+				case 'booker':
+					payment.amount = event.price;
+					break;
+				case 'bar':
+					payment.amount = event.price * 0.7;
+					break;
+				case 'insurance':
+					payment.amount = event.commission.insurance;
+					break;
+				case 'privateaser':
+					payment.amount = event.commission.privateaser + event.persons;
+					break;
+			}
+		})
+	}
+}))
+
 
 console.log(bars);
 console.log(events);
