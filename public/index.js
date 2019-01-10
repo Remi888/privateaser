@@ -182,6 +182,9 @@ actors.forEach(actor => events.forEach(event =>{ // step 5
 				case 'insurance':
 					payment.amount = event.commission.insurance;
 					break;
+				case 'treasury':
+					payment.amount = event.commission.treasury;
+					break;
 				case 'privateaser':
 					payment.amount = event.commission.privateaser + event.persons;
 					break;
